@@ -43,8 +43,8 @@ function authMiddleware(req, res, next) {
 app.post("/auth/register", async (req, res) => {
   const { name, email, password } = req.body;
 
-  if ((!name, !email, !password)) {
-    return res.status(400).json({ error: "Name, email, password required" });
+  if (!name || !email || !password) {
+    return res.status(400).json({ error: "Name, Email and password required" });
   }
 
   try {
@@ -92,7 +92,7 @@ app.post("/auth/login", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status.json(400).json({ error: "Email and password required" });
+    return res.status(400).json({ error: "Email and password required" });
   }
 
   try {
@@ -100,14 +100,14 @@ app.post("/auth/login", async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status.json({ error: "Invalid email or password" });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
     // Check password
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status.json({ error: "Invalid email or password" });
+      return res.status(401).json({ error: "Invalid email or password" });
     }
 
     // Create token
